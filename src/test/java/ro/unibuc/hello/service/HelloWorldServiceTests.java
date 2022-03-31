@@ -107,11 +107,11 @@ class HelloWorldServiceTest {
             TaskDTO taskDTO = helloWorldService.showById(null);
         }
         catch (Exception ex) {
-            // Assert
             Assertions.assertEquals("java.lang.NullPointerException", ex.getClass().getName());
 
         }
     }
+
     @Test
     void endTask_validId() {
         try {
@@ -127,6 +127,7 @@ class HelloWorldServiceTest {
             Assertions.fail();
         }
     }
+
     @Test
     void endTask_invalidId() {
         try {

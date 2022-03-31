@@ -1,18 +1,13 @@
 package ro.unibuc.hello.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 import ro.unibuc.hello.data.TaskEntity;
 import ro.unibuc.hello.data.TaskRepository;
 import ro.unibuc.hello.dto.TaskDTO;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
