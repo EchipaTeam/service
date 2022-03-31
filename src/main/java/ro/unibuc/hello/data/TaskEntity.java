@@ -14,8 +14,6 @@ public class TaskEntity{
     public Boolean isDone = false;
     public String importance;
 
-    public TaskEntity () {}
-
     public TaskEntity(String title, String importance, Date dueDate) {
         this.title = title;
         this.importance = importance;
