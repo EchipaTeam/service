@@ -29,9 +29,9 @@ public class HelloWorldController {
 
         List<TaskDTO> list = helloWorldService.listAll(search, value);
         if (list != null)
-            return new ResponseEntity<>(list,HttpStatus.OK);
+            return new ResponseEntity<>(list, HttpStatus.OK);
         else
-            return new ResponseEntity<> (null,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<> (HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/task")
