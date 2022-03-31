@@ -42,7 +42,7 @@ public class TaskDTO {
         return title;
     }
 
-    public Boolean getDone() {
+    public Boolean getIsDone() {
         return isDone;
     }
 
