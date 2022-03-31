@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.hello.data.TaskEntity;
-import ro.unibuc.hello.data.TaskRepository;
 import ro.unibuc.hello.dto.TaskDTO;
 import ro.unibuc.hello.service.HelloWorldService;
 
@@ -21,75 +20,55 @@ import ro.unibuc.hello.service.HelloWorldService;
 public class HelloWorldController {
 
     @Autowired
-    private TaskRepository taskRepository;
     private HelloWorldService helloWorldService;
-
-    private static final String datePattern = "yyyy-MM-dd";
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-
-    private final AtomicLong counter = new AtomicLong();
 
     @GetMapping("/tasks")
     @ResponseBody
     public ResponseEntity<List<TaskDTO>> listAll(@RequestParam(required = false, name = "search-by") String search,
                                                  @RequestParam(required = false, name = "value") String value) {
+
         List<TaskDTO> list = helloWorldService.listAll(search, value);
         if (list != null)
-        {
             return new ResponseEntity<>(list,HttpStatus.OK);
-        }
-        else return new ResponseEntity<> (null,HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<> (null,HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/task")
     @ResponseBody
     public ResponseEntity<TaskDTO> showById(String id) {
 
-        TaskEntity entity = taskRepository.findById(id).orElse(null);
-        if (entity == null) {
+        TaskDTO entity = helloWorldService.showById(id);
+        if (entity == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         else
-        {
-            return new ResponseEntity<>(new TaskDTO(counter.incrementAndGet(), entity), HttpStatus.OK);
-        }
+            return new ResponseEntity<>(entity , HttpStatus.OK);
     }
 
     @PostMapping("/task")
     @ResponseBody
     public ResponseEntity<TaskDTO> addTask(@RequestBody TaskEntity taskEntity) {
-        taskEntity.isDone = false;
-        taskRepository.save(taskEntity);
-        TaskDTO taskDTO = new TaskDTO(counter.incrementAndGet(), taskEntity);
+        TaskDTO taskDTO = helloWorldService.addTask(taskEntity);
         return new ResponseEntity<>(taskDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/task")
     @ResponseBody
     public ResponseEntity<TaskDTO> endTask(String id) {
-        TaskEntity entity = taskRepository.findById(id).orElse(null);
-        if (entity == null) {
+        TaskDTO entity = helloWorldService.endTask(id);
+        if (entity == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         else
-        {
-            entity.isDone = true;
-            taskRepository.save(entity);
-            return new ResponseEntity<>(new TaskDTO(counter.incrementAndGet(), entity), HttpStatus.ACCEPTED);
-        }
+            return new ResponseEntity<>(entity, HttpStatus.OK);
     }
 
     @DeleteMapping("/task")
     @ResponseBody
     public ResponseEntity<TaskDTO> deleteTask(String id) {
-        TaskEntity entity = taskRepository.findById(id).orElse(null);
-        if (entity == null) {
+        TaskDTO taskDTO = helloWorldService.deleteTask(id);
+        if (taskDTO == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         else
-        {
-            taskRepository.delete(entity);
-            return new ResponseEntity<>(new TaskDTO(counter.incrementAndGet(), entity), HttpStatus.OK);
-        }
+            return new ResponseEntity<>(taskDTO, HttpStatus.OK);
     }
 }
