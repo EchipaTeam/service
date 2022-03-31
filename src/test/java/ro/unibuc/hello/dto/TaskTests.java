@@ -18,6 +18,15 @@ public class TaskTests {
     }
 
     @Test
+    void test_constructor() {
+        try {
+            TaskDTO taskDTO = new TaskDTO(1,"64353dsdstasd", dateFormat.parse("2022-03-31"),"Task",false,"foarte");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Assertions.fail();
+        }
+    }
+    @Test
     void test_id(){
         Assertions.assertEquals(1,myTask.getId());
     }
