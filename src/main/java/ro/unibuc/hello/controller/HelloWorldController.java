@@ -9,7 +9,10 @@ import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ public class HelloWorldController {
     @Autowired
     MeterRegistry metricsRegistry;
     private final AtomicLong counter = new AtomicLong();
+    Logger logger = Logger.getLogger(String.valueOf(HelloWorldController.class));
 
     @GetMapping("/tasks")
     @ResponseBody
@@ -36,12 +40,18 @@ public class HelloWorldController {
     public ResponseEntity<List<TaskDTO>> listAll(@RequestParam(required = false, name = "search-by") String search,
                                                  @RequestParam(required = false, name = "value") String value) {
 
-        metricsRegistry.counter("my_non_aop_metric", "endpoint", "hello").increment(counter.incrementAndGet());
+        //metricsRegistry.counter("my_non_aop_metric", "endpoint", "hello").increment(counter.incrementAndGet());
         List<TaskDTO> list = helloWorldService.listAll(search, value);
         if (list != null)
+        {
+            logger.info("List of Tasks was returned!");
             return new ResponseEntity<>(list, HttpStatus.OK);
+        }
         else
+        {
+            logger.info("List of Tasks is empty!");
             return new ResponseEntity<> (HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/task")
@@ -52,9 +62,15 @@ public class HelloWorldController {
 
         TaskDTO entity = helloWorldService.showById(id);
         if (entity == null)
+        {
+            logger.info("Task by id was returned!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         else
+        {
+            logger.warning("Task by id was not found!");
             return new ResponseEntity<>(entity , HttpStatus.OK);
+        }
     }
 
     @PostMapping("/task")
@@ -63,6 +79,7 @@ public class HelloWorldController {
     @Counted(value = "hello.addtask.count", description = "Times task was added")
     public ResponseEntity<TaskDTO> addTask(@RequestBody TaskEntity taskEntity) {
         TaskDTO taskDTO = helloWorldService.addTask(taskEntity);
+        logger.info("Task was created!");
         return new ResponseEntity<>(taskDTO, HttpStatus.CREATED);
     }
 
@@ -73,9 +90,15 @@ public class HelloWorldController {
     public ResponseEntity<TaskDTO> endTask(String id) {
         TaskDTO entity = helloWorldService.endTask(id);
         if (entity == null)
+        {
+            logger.warning("Task was not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         else
+        {
+            logger.info("Task was modified!");
             return new ResponseEntity<>(entity, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/task")
@@ -85,8 +108,14 @@ public class HelloWorldController {
     public ResponseEntity<TaskDTO> deleteTask(String id) {
         TaskDTO taskDTO = helloWorldService.deleteTask(id);
         if (taskDTO == null)
+        {
+            logger.warning("Task was not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         else
+        {
+            logger.info("Task was deleted!");
             return new ResponseEntity<>(taskDTO, HttpStatus.OK);
+        }
     }
 }
