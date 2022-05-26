@@ -33,7 +33,7 @@ public class HelloWorldController {
     public ResponseEntity<List<TaskDTO>> listAll(@RequestParam(required = false, name = "search-by") String search,
                                                  @RequestParam(required = false, name = "value") String value) {
 
-        metricsRegistry.counter("my_non_aop_metric", "endpoint", "hello").increment(counter.incrementAndGet());
+        // metricsRegistry.counter("my_non_aop_metric", "endpoint", "hello").increment(counter.incrementAndGet());
         List<TaskDTO> list = helloWorldService.listAll(search, value);
         if (list != null) {
             logger.info("List of Tasks was returned!");
