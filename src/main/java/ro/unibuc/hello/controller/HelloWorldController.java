@@ -1,18 +1,8 @@
 package ro.unibuc.hello.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.MeterRegistry;
-
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +12,19 @@ import ro.unibuc.hello.data.TaskEntity;
 import ro.unibuc.hello.dto.TaskDTO;
 import ro.unibuc.hello.service.HelloWorldService;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
+
 @Controller
 public class HelloWorldController {
 
-    @Autowired
-    private HelloWorldService helloWorldService;
-
+    private final AtomicLong counter = new AtomicLong();
     @Autowired
     MeterRegistry metricsRegistry;
-    private final AtomicLong counter = new AtomicLong();
     Logger logger = Logger.getLogger(String.valueOf(HelloWorldController.class));
+    @Autowired
+    private HelloWorldService helloWorldService;
 
     @GetMapping("/tasks")
     @ResponseBody
@@ -42,15 +35,12 @@ public class HelloWorldController {
 
         //metricsRegistry.counter("my_non_aop_metric", "endpoint", "hello").increment(counter.incrementAndGet());
         List<TaskDTO> list = helloWorldService.listAll(search, value);
-        if (list != null)
-        {
+        if (list != null) {
             logger.info("List of Tasks was returned!");
             return new ResponseEntity<>(list, HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             logger.info("List of Tasks is empty!");
-            return new ResponseEntity<> (HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -61,15 +51,12 @@ public class HelloWorldController {
     public ResponseEntity<TaskDTO> showById(String id) {
 
         TaskDTO entity = helloWorldService.showById(id);
-        if (entity == null)
-        {
+        if (entity == null) {
             logger.info("Task by id was returned!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else
-        {
+        } else {
             logger.warning("Task by id was not found!");
-            return new ResponseEntity<>(entity , HttpStatus.OK);
+            return new ResponseEntity<>(entity, HttpStatus.OK);
         }
     }
 
@@ -89,13 +76,10 @@ public class HelloWorldController {
     @Counted(value = "hello.updatetask.count", description = "Times task was modified")
     public ResponseEntity<TaskDTO> endTask(String id) {
         TaskDTO entity = helloWorldService.endTask(id);
-        if (entity == null)
-        {
+        if (entity == null) {
             logger.warning("Task was not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else
-        {
+        } else {
             logger.info("Task was modified!");
             return new ResponseEntity<>(entity, HttpStatus.OK);
         }
@@ -107,13 +91,10 @@ public class HelloWorldController {
     @Counted(value = "hello.deletetask.count", description = "Times task was deleted")
     public ResponseEntity<TaskDTO> deleteTask(String id) {
         TaskDTO taskDTO = helloWorldService.deleteTask(id);
-        if (taskDTO == null)
-        {
+        if (taskDTO == null) {
             logger.warning("Task was not found!");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else
-        {
+        } else {
             logger.info("Task was deleted!");
             return new ResponseEntity<>(taskDTO, HttpStatus.OK);
         }

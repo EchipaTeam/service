@@ -1,7 +1,6 @@
 package ro.unibuc.hello.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.cliftonlabs.json_simple.JsonObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,30 +23,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(SpringExtension.class)
 public class HelloWorldControllerTest {
 
-    @Mock
-    private HelloWorldService helloWorldService;
-
-    @Mock
-    TaskRepository mockTaskRepository;
-
-    @InjectMocks
-    private HelloWorldController helloWorldController;
-
-    private MockMvc mockMvc;
-
-    private ObjectMapper objectMapper;
-
     private static final String datePattern = "yyyy-MM-dd";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+    @Mock
+    TaskRepository mockTaskRepository;
+    @Mock
+    private HelloWorldService helloWorldService;
+    @InjectMocks
+    private HelloWorldController helloWorldController;
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
@@ -68,13 +60,14 @@ public class HelloWorldControllerTest {
         MvcResult result = mockMvc.perform(get("/tasks/")
                         .content(objectMapper.writeValueAsString(taskEntity))
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andReturn();
+                .andReturn();
 
         // Assert
         Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
 
     }
+
     @Test
     void test_listAll_null() throws Exception {
         List<TaskEntity> taskEntities = new ArrayList<>();
@@ -87,7 +80,7 @@ public class HelloWorldControllerTest {
         MvcResult result = mockMvc.perform(get("/tasks/")
                         .content(objectMapper.writeValueAsString(taskEntity))
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andReturn();
+                .andReturn();
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
     }
@@ -190,7 +183,7 @@ public class HelloWorldControllerTest {
         try {
 
             ObjectMapper objectMapper = new ObjectMapper();
-            byte[] requestJson =  objectMapper.writeValueAsBytes(taskEntity);
+            byte[] requestJson = objectMapper.writeValueAsBytes(taskEntity);
 
             mockMvc.perform(post("/task")
                             .contentType(MediaType.APPLICATION_JSON)

@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
-public class TaskEntity{
+public class TaskEntity {
     @Id
     public String id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
