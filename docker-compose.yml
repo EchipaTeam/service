@@ -4,7 +4,7 @@ services:
     image: hello-img
     build: .
     ports:
-      - 8080:8080
+      - 8088:8089
     environment:
       ENVIRONMENT_NAME: local
       MONGODB_CONECTION_URL: mongodb://root:example@mongo:27017/
