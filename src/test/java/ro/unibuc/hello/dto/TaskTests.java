@@ -14,41 +14,47 @@ public class TaskTests {
     TaskDTO myTask;
 
     public TaskTests() throws ParseException {
-        myTask = new TaskDTO(1,"64353dsdstasd", dateFormat.parse("2022-03-31"),"Task",false,"foarte");
+        myTask = new TaskDTO(1, "64353dsdstasd", dateFormat.parse("2022-03-31"), "Task", false, "foarte");
     }
 
     @Test
     void test_constructor() {
         try {
-            TaskDTO taskDTO = new TaskDTO(1,"64353dsdstasd", dateFormat.parse("2022-03-31"),"Task",false,"foarte");
+            TaskDTO taskDTO = new TaskDTO(1, "64353dsdstasd", dateFormat.parse("2022-03-31"), "Task", false, "foarte");
         } catch (ParseException e) {
             e.printStackTrace();
             Assertions.fail();
         }
     }
+
     @Test
-    void test_id(){
-        Assertions.assertEquals(1,myTask.getId());
+    void test_id() {
+        Assertions.assertEquals(1, myTask.getId());
     }
+
     @Test
-    void test_idTask(){
-        Assertions.assertSame("64353dsdstasd",myTask.getIdTask());
+    void test_idTask() {
+        Assertions.assertSame("64353dsdstasd", myTask.getIdTask());
     }
+
     @Test
     void test_dueDate() throws ParseException {
         Date date = dateFormat.parse("2022-03-31");
-        Assertions.assertEquals(date,myTask.getDueDate());
+        Assertions.assertEquals(date, myTask.getDueDate());
     }
+
     @Test
-    void test_title(){
-        Assertions.assertSame("Task",myTask.getTitle());
+    void test_title() {
+        Assertions.assertSame("Task", myTask.getTitle());
     }
+
     @Test
-    void test_isDone(){
-        Assertions.assertSame(false,myTask.getIsDone());
+    void test_isDone() {
+        Assertions.assertSame(false, myTask.getIsDone());
     }
+
     @Test
-    void test_importance(){
-        Assertions.assertSame("foarte",myTask.getImportance());
+    void test_importance() {
+        Assertions.assertSame("foarte", myTask.getImportance());
     }
 }
