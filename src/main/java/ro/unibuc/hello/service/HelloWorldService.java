@@ -6,7 +6,6 @@ import ro.unibuc.hello.data.TaskEntity;
 import ro.unibuc.hello.data.TaskRepository;
 import ro.unibuc.hello.dto.TaskDTO;
 
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,13 +16,11 @@ public class HelloWorldService {
 
     private static final String datePattern = "yyyy-MM-dd";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-
+    private final AtomicLong counter = new AtomicLong();
     @Autowired
     private TaskRepository taskRepository;
 
-    private final AtomicLong counter = new AtomicLong();
-
-    public List<TaskDTO> listAll(String search, String value){
+    public List<TaskDTO> listAll(String search, String value) {
         List<TaskDTO> entityList;
         if (search == null) {
             entityList = taskRepository.findAll().stream().map(taskEntity -> new TaskDTO(counter.incrementAndGet(), taskEntity)).
@@ -31,8 +28,7 @@ public class HelloWorldService {
             return entityList;
         }
 
-        switch (search)
-        {
+        switch (search) {
             case "importance":
                 entityList = taskRepository.findByImportance(value).stream().map(taskEntity -> new TaskDTO(counter.incrementAndGet(), taskEntity)).
                         collect(Collectors.toList());
@@ -46,7 +42,7 @@ public class HelloWorldService {
         return null;
     }
 
-    public TaskDTO showById (String id) {
+    public TaskDTO showById(String id) {
         TaskEntity entity = taskRepository.findById(id).orElse(null);
         return new TaskDTO(counter.incrementAndGet(), entity);
     }
@@ -61,21 +57,18 @@ public class HelloWorldService {
         TaskEntity entity = taskRepository.findById(id).orElse(null);
         if (entity == null) {
             return null;
-        }
-        else
-        {
+        } else {
             entity.isDone = true;
             taskRepository.save(entity);
             return new TaskDTO(counter.incrementAndGet(), entity);
         }
     }
+
     public TaskDTO deleteTask(String id) {
         TaskEntity entity = taskRepository.findById(id).orElse(null);
         if (entity == null) {
             return null;
-        }
-        else
-        {
+        } else {
             taskRepository.delete(entity);
             return new TaskDTO(counter.incrementAndGet(), entity);
         }

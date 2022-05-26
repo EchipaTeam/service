@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ro.unibuc.hello.data.TaskEntity;
 import ro.unibuc.hello.data.TaskRepository;
 import ro.unibuc.hello.dto.TaskDTO;
 
-import javax.swing.text.html.parser.Entity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,15 +24,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 class HelloWorldServiceTest {
 
-    @Mock
-    TaskRepository mockTaskRepository;
-
-    @InjectMocks
-    HelloWorldService helloWorldService = new HelloWorldService();
-
     private static final String datePattern = "yyyy-MM-dd";
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
     private final AtomicLong counter = new AtomicLong();
+    @Mock
+    TaskRepository mockTaskRepository;
+    @InjectMocks
+    HelloWorldService helloWorldService = new HelloWorldService();
 
     public TaskEntity createTaskEntity(Date date, String title, String importance, String id) {
         TaskEntity taskEntity = new TaskEntity(title, importance, date);
@@ -68,10 +64,10 @@ class HelloWorldServiceTest {
 
     @Test
     void test_listAll_null() throws ParseException {
-        List <TaskEntity> taskEntities = new ArrayList<>();
+        List<TaskEntity> taskEntities = new ArrayList<>();
 
         Date date = dateFormat.parse("2022-04-12");
-        TaskEntity  taskEntity = createTaskEntity(date, "Increase code coverage", "foarte",
+        TaskEntity taskEntity = createTaskEntity(date, "Increase code coverage", "foarte",
                 "6223117e5af19d7fdeaa4f9e");
 
         taskEntities.add(taskEntity);
@@ -105,8 +101,7 @@ class HelloWorldServiceTest {
     void testShowById_invalidId() {
         try {
             TaskDTO taskDTO = helloWorldService.showById(null);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Assertions.assertEquals("java.lang.NullPointerException", ex.getClass().getName());
 
         }
@@ -116,13 +111,12 @@ class HelloWorldServiceTest {
     void endTask_validId() {
         try {
             Date date = dateFormat.parse("2022-04-12");
-            TaskEntity taskEntity =  createTaskEntity(date, "Increase code coverage", "foarte",
-                                                                            "6223117e5af19d7fdeaa4f9e");
+            TaskEntity taskEntity = createTaskEntity(date, "Increase code coverage", "foarte",
+                    "6223117e5af19d7fdeaa4f9e");
             when(mockTaskRepository.findById(taskEntity.id)).thenReturn(Optional.of(taskEntity));
             helloWorldService.endTask(taskEntity.id);
             Assertions.assertEquals(true, taskEntity.isDone);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             Assertions.fail();
         }
@@ -132,8 +126,7 @@ class HelloWorldServiceTest {
     void endTask_invalidId() {
         try {
             TaskDTO taskDTO = helloWorldService.endTask(null);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             // Assert
             Assertions.assertEquals("java.lang.NullPointerException", ex.getClass().getName());
         }
@@ -144,8 +137,8 @@ class HelloWorldServiceTest {
         Date date = null;
         try {
             date = dateFormat.parse("2022-04-12");
-            TaskEntity taskEntity =  createTaskEntity(date, "Increase code coverage", "foarte",
-                                                "6223117e5af19d7fdeaa4f9e");
+            TaskEntity taskEntity = createTaskEntity(date, "Increase code coverage", "foarte",
+                    "6223117e5af19d7fdeaa4f9e");
 
             when(mockTaskRepository.findById(taskEntity.id)).thenReturn(Optional.of(taskEntity));
 
